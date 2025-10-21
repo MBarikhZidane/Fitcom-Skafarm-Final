@@ -37,18 +37,24 @@ class CartController
         $qty         = 1;
 
         if (!$kode_barang) {
-            die("Barang tidak valid!");
+            header("Location: index.php?controller=cart&action=mycart&status=error");
+            exit;
         }
 
         $harga = $this->barangModel->getHargaBarang($kode_barang);
 
         if ($harga <= 0) {
-            die("Barang tidak ditemukan atau harga tidak valid!");
+            header("Location: index.php?controller=cart&action=mycart&status=error");
+            exit;
         }
 
-        $this->cartModel->addToCart($kode_user, $kode_barang, $qty, $harga);
+        $result = $this->cartModel->addToCart($kode_user, $kode_barang, $qty, $harga);
 
-        header("Location: index.php?controller=cart&action=mycart");
+        if ($result) {
+            header("Location: index.php?controller=cart&action=mycart&status=success");
+        } else {
+            header("Location: index.php?controller=cart&action=mycart&status=error");
+        }
     }
 
     public function delete()
@@ -58,8 +64,12 @@ class CartController
         $kode_user = $_SESSION['user_id'];
         $id_cart   = $_GET['id_cart'];
 
-        $this->cartModel->deleteFromCartById($kode_user, $id_cart);
+        $result = $this->cartModel->deleteFromCartById($kode_user, $id_cart);
 
-        header("Location: index.php?controller=cart&action=mycart");
+        if ($result) {
+            header("Location: index.php?controller=cart&action=mycart&status=success");
+        } else {
+            header("Location: index.php?controller=cart&action=mycart&status=error");
+        }
     }
 }

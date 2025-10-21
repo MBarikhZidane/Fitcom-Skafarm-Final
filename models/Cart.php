@@ -11,7 +11,7 @@ class Cart
 
     public function getCartByUser($kode_user)
     {
-        $query = "SELECT c.id_cart, c.*, b.nama_barang, b.harga, b.img, k.nama_kategori
+        $query = "SELECT c.id_cart, c.*, b.nama_barang, b.harga, b.img, k.nama_kategori, b.stok
               FROM master_cart c
               JOIN master_barang b ON c.kode_barang = b.kode_barang
               JOIN master_kategori k ON b.kategori_id = k.kode_kategori

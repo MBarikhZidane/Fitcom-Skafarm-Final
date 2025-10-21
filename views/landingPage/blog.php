@@ -87,6 +87,14 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 
                         <!-- Table -->
                         <div class="table-responsive shadow-sm rounded mt-3">
+                            <?php if (!empty($_GET['status'])): ?>
+                                <?php if ($_GET['status'] === 'error'): ?>
+                                    <div class="alert alert-danger">Gagal Melakukan Operasi, Coba Lagi.</div>
+                                <?php elseif ($_GET['status'] === 'success'): ?>
+                                    <div class="alert alert-success">Berhasil, Data Sudah Paling Baru.</div>
+                                <?php endif; ?>
+                            <?php endif; ?>
+
                             <table class="table table-striped table-hover align-middle">
                                 <thead class="table-success">
                                     <tr>
@@ -102,14 +110,18 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
                                             <td><?= $b['judul']; ?></td>
                                             <td>
                                                 <div class="d-flex justify-content-center gap-2">
-                                                    <button onclick="openEditModal(
-    '<?= $b['id_blog']; ?>', 
-    '<?= addslashes($b['judul']); ?>', 
-    '<?= addslashes(htmlspecialchars($b['artikel'])); ?>', 
-    '<?= $b['img']; ?>'
-  )" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#blogEditBlogModal">
+                                                    <button
+                                                        class="btn btn-sm btn-warning"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#blogEditBlogModal"
+                                                        data-id="<?= htmlspecialchars($b['id_blog']); ?>"
+                                                        data-judul="<?= htmlspecialchars($b['judul']); ?>"
+                                                        data-artikel="<?= htmlspecialchars($b['artikel']); ?>"
+                                                        data-img="<?= htmlspecialchars($b['img']); ?>"
+                                                        onclick="openEditModal(this)">
                                                         <i class="bi bi-pencil-square"></i>
                                                     </button>
+
                                                     <button class="btn btn-sm btn-danger" onclick="if(confirm('Yakin ingin menghapus blog ini?')){ window.location.href='index.php?controller=blog&action=delete&id_blog=<?= $b['id_blog']; ?>'; }">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
@@ -212,7 +224,12 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 <script src="assets/js/profile.js"></script>
 <script src="assets/js/script.js"></script>
 <script>
-    function openEditModal(id, judul, artikel, img) {
+    function openEditModal(button) {
+        const id = $(button).data('id');
+        const judul = $(button).data('judul');
+        const artikel = $(button).data('artikel');
+        const img = $(button).data('img');
+
         $('#blogEditId').val(id);
         $('#blogEditTitle').val(judul);
         $('#blogEditContent').val(artikel);

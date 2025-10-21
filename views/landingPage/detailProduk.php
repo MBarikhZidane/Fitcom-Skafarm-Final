@@ -75,34 +75,42 @@ if (empty($imgs)) {
                     </p>
 
                     <h4 class="fw-bold text-success mb-4">
-                        <i class="bi bi-currency-dollar me-2"></i>
                         Rp <?= number_format($product['harga'], 0, ',', '.') ?>
                     </h4>
 
                     <div class="d-flex flex-wrap gap-2 mb-4">
                         <?php if ($username): ?>
-                            <form method="POST" action="index.php?controller=detailtransaksi&action=checkout"
-                                class="flex-grow-1">
-                                <input type="hidden" name="kode_barang" value="<?= $product['kode_barang']; ?>">
-                                <input type="hidden" name="quantity" value="1">
-                                <button type="submit" class="btn btn-success w-100">
-                                    <i class="bi bi-bag me-1"></i> Beli
+                            <?php if ($product['stok'] > 0): ?>
+                                <form method="POST" action="index.php?controller=detailtransaksi&action=checkout" class="flex-grow-1">
+                                    <input type="hidden" name="kode_barang" value="<?= $product['kode_barang']; ?>">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="btn btn-success w-100">
+                                        <i class="bi bi-bag me-1"></i> Beli
+                                    </button>
+                                </form>
+
+                                <a href="index.php?controller=cart&action=add&id=<?= $product['kode_barang'] ?>"
+                                    class="btn btn-outline-success flex-grow-1">
+                                    <i class="bi bi-cart-plus me-1"></i> Tambah Keranjang
+                                </a>
+                            <?php else: ?>
+                                <button class="btn btn-secondary flex-grow-1 w-100" disabled>
+                                    <i class="bi bi-x-circle me-1"></i> Stok Habis
                                 </button>
-                            </form>
-                            <a href="index.php?controller=cart&action=add&id=<?= $product['kode_barang'] ?>"
-                                class="btn btn-outline-success flex-grow-1">
-                                <i class="bi bi-cart-plus me-1"></i> Tambah Keranjang
-                            </a>
+                                <button class="btn btn-outline-secondary flex-grow-1" disabled>
+                                    <i class="bi bi-cart-x me-1"></i> Tidak Tersedia
+                                </button>
+                            <?php endif; ?>
                         <?php else: ?>
                             <a href="index.php?controller=auth&action=showLogin" class="btn btn-success flex-grow-1">
                                 <i class="bi bi-bag me-1"></i> Beli
                             </a>
-                            <a href="index.php?controller=auth&action=showLogin"
-                                class="btn btn-outline-success flex-grow-1">
+                            <a href="index.php?controller=auth&action=showLogin" class="btn btn-outline-success flex-grow-1">
                                 <i class="bi bi-cart-plus me-1"></i> Tambah Keranjang
                             </a>
                         <?php endif; ?>
                     </div>
+
 
                     <h5 class="fw-bold mb-3">
                         <i class="bi bi-info-circle text-success me-2"></i> Detail Produk
@@ -254,50 +262,52 @@ if (empty($imgs)) {
                 <div class="col-12">
                     <h4>Anda sudah komen.</h4>
                 </div>
-                </div>
             </div>
-        <?php elseif ($transaksi_kode == '1'): ?>
-            <div class="row"><h4>Anda harus beli sebelum komen.</h4></div>
-        <?php else: ?>
-            <div class="row">
-                <div class="col-12">
-                    <div class="card border-0 shadow-sm rounded-3">
-                        <form class="card-body p-4" method="POST" action="index.php?controller=beranda&action=comment">
-                            <h3 class="fw-bold text-dark mb-4 fs-5">Submit Your Review</h3>
-                            <div class="mb-4">
-                                <label class="form-label text-muted small mb-2">Add Your Rating</label>
-                                <div class="text-secondary fs-4">
-                                    <?php for ($i = 1; $i <= 5; $i++): ?>
-                                        <span class="star" style="cursor:pointer; font-size:24px;" data-value="<?= $i ?>">
-                                            <i class="bi bi-star-fill"></i>
-                                        </span>
-                                    <?php endfor; ?>
-                                    <input type="hidden" id="rating" name="rating" required>
-                                </div>
-                            </div>
-                            <div class="mb-2">
-                                <label class="form-label fw-semibold text-dark mb-2">Write Your Review*</label>
-                                <textarea class="form-control form-control-lg border-2 rounded-3" name="comment" rows="6"
-                                    placeholder="Bagikan pengalaman Anda..."></textarea>
-                                <input type="hidden" name="kode_barang"
-                                    value="<?= htmlspecialchars($product['kode_barang']) ?>">
-                            </div>
-                            <div class="d-flex justify-content-center justify-content-md-end">
-                                <button type="submit" class="btn btn-success btn-lg px-3 py-2 fw-bold rounded-3 shadow-sm">
-                                    <i class="bi bi-send me-2"></i>Submit Review
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        <?php endif; ?>
     </div>
+<?php elseif ($transaksi_kode == '1'): ?>
+    <div class="row">
+        <h4>Anda harus beli sebelum komen.</h4>
+    </div>
+<?php else: ?>
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-3">
+                <form class="card-body p-4" method="POST" action="index.php?controller=beranda&action=comment">
+                    <h3 class="fw-bold text-dark mb-4 fs-5">Submit Your Review</h3>
+                    <div class="mb-4">
+                        <label class="form-label text-muted small mb-2">Add Your Rating</label>
+                        <div class="text-secondary fs-4">
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <span class="star" style="cursor:pointer; font-size:24px;" data-value="<?= $i ?>">
+                                    <i class="bi bi-star-fill"></i>
+                                </span>
+                            <?php endfor; ?>
+                            <input type="hidden" id="rating" name="rating" required>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold text-dark mb-2">Write Your Review*</label>
+                        <textarea class="form-control form-control-lg border-2 rounded-3" name="comment" rows="6"
+                            placeholder="Bagikan pengalaman Anda..."></textarea>
+                        <input type="hidden" name="kode_barang"
+                            value="<?= htmlspecialchars($product['kode_barang']) ?>">
+                    </div>
+                    <div class="d-flex justify-content-center justify-content-md-end">
+                        <button type="submit" class="btn btn-success btn-lg px-3 py-2 fw-bold rounded-3 shadow-sm">
+                            <i class="bi bi-send me-2"></i>Submit Review
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+</div>
 </div>
 
 
 <script>
-    $(document).on("mouseenter mousemove mouseleave", ".zoom", function (e) {
+    $(document).on("mouseenter mousemove mouseleave", ".zoom", function(e) {
         let $this = $(this);
 
         if (e.type === "mouseenter") {
@@ -334,17 +344,17 @@ if (empty($imgs)) {
         currentIndex = index;
     }
 
-    $thumbs.on("click", function () {
+    $thumbs.on("click", function() {
         const index = $thumbs.index(this);
         updateActive(index);
     });
 
-    $prevBtn.on("click", function () {
+    $prevBtn.on("click", function() {
         currentIndex = (currentIndex - 1 + $thumbs.length) % $thumbs.length;
         updateActive(currentIndex);
     });
 
-    $nextBtn.on("click", function () {
+    $nextBtn.on("click", function() {
         currentIndex = (currentIndex + 1) % $thumbs.length;
         updateActive(currentIndex);
     });

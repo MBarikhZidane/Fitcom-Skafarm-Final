@@ -54,8 +54,12 @@ class BlogController
                 $img = $filename;
             }
         }
-        $this->model->insert($kode_user, $judul, $artikel, $img);
-        header("Location: index.php?controller=blog&action=myblog");
+        $result = $this->model->insert($kode_user, $judul, $artikel, $img);
+        if ($result) {
+            header("Location: index.php?controller=blog&action=myblog&status=success");
+        } else {
+            header("Location: index.php?controller=blog&action=myblog&status=error");
+        }
     }
 
     public function edit()
@@ -81,8 +85,12 @@ class BlogController
             }
         }
 
-        $this->model->update($id_blog, $judul, $artikel, $img);
-        header("Location: index.php?controller=blog&action=myblog");
+        $result = $this->model->update($id_blog, $judul, $artikel, $img);
+        if ($result) {
+            header("Location: index.php?controller=blog&action=myblog&status=success");
+        } else {
+            header("Location: index.php?controller=blog&action=myblog&status=error");
+        }
     }
 
     public function delete()
@@ -97,8 +105,11 @@ class BlogController
             }
         }
 
-        $this->model->delete($_GET['id_blog']);
-
-        header("Location: index.php?controller=blog&action=myblog");
+        $result = $this->model->delete($_GET['id_blog']);
+        if ($result) {
+            header("Location: index.php?controller=blog&action=myblog&status=success");
+        } else {
+            header("Location: index.php?controller=blog&action=myblog&status=error");
+        }
     }
 }

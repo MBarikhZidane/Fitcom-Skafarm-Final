@@ -64,6 +64,18 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
         <div class="col-md-9">
             <div class="cart-main-content pt-5">
                 <div class="cart-tab-content pb-5 mb-5 px-2 px-md-4" id="cartOrderTabContent">
+                    <?php if (!empty($_GET['status'])): ?>
+                        <?php if ($_GET['status'] === 'error'): ?>
+                            <div class="alert alert-danger">
+                                <?= htmlspecialchars($_GET['msg'] ?? 'Gagal Melakukan Operasi, Coba Lagi.') ?>
+                            </div>
+                        <?php elseif ($_GET['status'] === 'success'): ?>
+                            <div class="alert alert-success">
+                                <?= htmlspecialchars($_GET['msg'] ?? 'Berhasil Melakukan Operasi.') ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
+
                     <div class="tab-pane fade show active" id="cart-all-orders" role="tabpanel">
                         <form method="POST" action="index.php?controller=detailtransaksi&action=checkout">
 
@@ -90,6 +102,7 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
                                         <div class="flex-grow-1 w-100 d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
                                             <div>
                                                 <input type="hidden" name="kode_barang" value="<?= $item['kode_barang']; ?>">
+                                                <input type="hidden" name="stok" value="<?= $item['stok']; ?>">
                                                 <h6 class="fw-semibold mb-1"><?= htmlspecialchars($item['nama_barang']); ?></h6>
                                                 <div class="text-success fw-bold mb-1">Rp <?= number_format($item['harga_satuan']); ?></div>
                                                 <div class="text-muted small mb-2">Kategori: <?= htmlspecialchars($item['nama_kategori']); ?></div>

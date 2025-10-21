@@ -18,6 +18,7 @@ $username = $_SESSION['username'] ?? '';
                     <div class="card shadow-lg border-0 h-100">
                         <div class="card-body">
                             <input type="hidden" name="kode_transaksi" value="<?= htmlspecialchars($transaction[0]['kode_transaksi']); ?>">
+                            <input type="hidden" name="kode_barang" value="<?= htmlspecialchars($transaction[0]['kode_barang']); ?>">
 
                             <h5 class="fw-bold mb-3">
                                 <i class="bi bi-truck text-success me-2"></i> Informasi Pengiriman

@@ -64,6 +64,18 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
         <div class="col-md-9">
             <div class="cart-main-content pt-5">
                 <div class="cart-tab-content pb-5 mb-5 px-2 px-md-4" id="cartOrderTabContent">
+                    <?php if (!empty($_GET['status'])): ?>
+                        <?php if ($_GET['status'] === 'error'): ?>
+                            <div class="alert alert-danger">
+                                <?= htmlspecialchars($_GET['msg'] ?? 'Gagal Melakukan Operasi, Coba Lagi.') ?>
+                            </div>
+                        <?php elseif ($_GET['status'] === 'success'): ?>
+                            <div class="alert alert-success">
+                                <?= htmlspecialchars($_GET['msg'] ?? 'Berhasil Melakukan Operasi.') ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
+
                     <div class="tab-pane fade show active" id="cart-all-orders" role="tabpanel">
 
                         <?php foreach ($historyItems as $item): ?>
