@@ -39,3 +39,14 @@ $(document).ready(function () {
     }
   });
 });
+
+
+document.querySelectorAll('.rating-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const form = btn.nextElementSibling; 
+        if (form && form.style.display === 'none') {
+            form.style.display = 'block';
+            btn.style.display = 'none'; 
+        }
+    });
+});

@@ -74,13 +74,17 @@ class BerandaController
         $id = $_GET['id'];
         $product = $this->produkModel->findById($id);
         $ratings = $this->produkModel->getRating($id, $user);
-
         $ratingData = $this->showProductRating($id);
 
         $kode_user = (int) $user;
-        $transaksi = $this->produkModel->getTransactionkode($kode_user, $id);
-        $transaksi_kode = $transaksi['kode_transaksi'] ?? '1';
-        $checktransaction = $this->produkModel->checkTransaction($transaksi_kode);
+        $transaksiList = $this->produkModel->getTransactionkodeAll($kode_user, $id);
+
+        $transaksiBelumKomen = [];
+        foreach ($transaksiList as $trx) {
+            if (!$this->produkModel->checkCommentByTransaction($trx['kode_transaksi'], $kode_user)) {
+                $transaksiBelumKomen[] = $trx['kode_transaksi'];
+            }
+        }
 
         if (!$product) {
             header("Location: index.php?controller=beranda&action=index&status=notfound");
@@ -96,30 +100,63 @@ class BerandaController
             session_start();
         }
 
-        $user = $_SESSION['user_id'];
-        $kode_user = (int) $user;
+        $kode_user = $_SESSION['user_id'] ?? null;
+
+        if (!$kode_user) {
+            header("Location: index.php?controller=auth&action=login");
+            exit;
+        }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $rating = $_POST['rating'];
-            $comment = $_POST['comment'];
-            $kode_barang = $_POST['kode_barang'];
-            $id_barang = (int) $kode_barang;
+            $rating = intval($_POST['rating'] ?? 0);
+            $comment = trim($_POST['comment'] ?? '');
+            $kode_barang = intval($_POST['kode_barang'] ?? 0);
+            $kode_transaksi = $_POST['kode_transaksi'] ?? null;
 
-
-            $transaksi = $this->produkModel->getTransactionkode($kode_user, $id_barang);
-            $transaksi_kode = $transaksi['kode_transaksi'] ?? '1';
-            $checktransaction = $this->produkModel->checkTransaction($transaksi_kode);
-
-            if ($checktransaction != 0 or $transaksi_kode == '1') {
-                header("Location: index.php?controller=beranda&action=index&status=notfound");
+            if (empty($kode_barang) || empty($rating) || empty($comment)) {
+                header("Location: index.php?controller=beranda&action=detail&id=$kode_barang&status=invalid_input");
                 exit;
-            } else {
-                $this->produkModel->insertComment($kode_user, $rating, $comment, $transaksi_kode, $id_barang);
-                header("Location: index.php?controller=beranda&action=detail&id=$id_barang");
+            }
+
+            if ($kode_transaksi) {
+                $alreadyCommented = $this->produkModel->checkCommentByTransaction($kode_transaksi, $kode_user);
+
+                if (!$alreadyCommented) {
+                    $this->produkModel->insertComment($kode_user, $rating, $comment, $kode_transaksi, $kode_barang);
+                    header("Location: index.php?controller=beranda&action=detail&id=$kode_barang&status=success");
+                } else {
+                    header("Location: index.php?controller=beranda&action=detail&id=$kode_barang&status=already_commented");
+                }
+                exit;
+            }
+
+            else {
+                $transaksiList = $this->produkModel->getTransactionkodeAll($kode_user, $kode_barang);
+                $inserted = false;
+
+                foreach ($transaksiList as $transaksi) {
+                    $kode_transaksi = $transaksi['kode_transaksi'];
+
+                    $alreadyCommented = $this->produkModel->checkCommentByTransaction($kode_transaksi, $kode_user);
+
+                    if (!$alreadyCommented) {
+                        $this->produkModel->insertComment($kode_user, $rating, $comment, $kode_transaksi, $kode_barang);
+                        $inserted = true;
+                        break;
+                    }
+                }
+
+                if ($inserted) {
+                    header("Location: index.php?controller=beranda&action=detail&id=$kode_barang&status=success");
+                } else {
+                    header("Location: index.php?controller=beranda&action=detail&id=$kode_barang&status=already_commented");
+                }
                 exit;
             }
         }
     }
+
+
 
     public function deleteComment()
     {

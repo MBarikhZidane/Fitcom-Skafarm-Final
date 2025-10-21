@@ -292,6 +292,14 @@ h6 {
 .small {
   font-size: clamp(0.75rem, 1.8vw, 0.85rem);
 }
+.star {
+    font-size: 48px;
+    color: #ccc;
+}
+.star.selected {
+    color: gold;
+    cursor: pointer;
+}
 @media (max-width: 576px) {
   .form-check {
     margin-bottom: 0.75rem;

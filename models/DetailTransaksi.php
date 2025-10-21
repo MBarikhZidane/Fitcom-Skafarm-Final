@@ -9,17 +9,31 @@ class Detailtransaksi
 
     public function getHistory($kode_user)
     {
-        $query = "SELECT b.nama_barang, b.harga, b.img, k.nama_kategori,
-                     dt.qty, dt.harga_total
-              FROM master_transaksi mt
-              JOIN detail_transaksi dt ON mt.id_transaksi = dt.id_transaksi
-              JOIN master_barang b ON dt.kode_barang = b.kode_barang
-              JOIN master_kategori k ON b.kategori_id = k.kode_kategori
-              WHERE mt.kode_user = :kode_user
-              ORDER BY mt.id_transaksi DESC";
+        $query = "SELECT mt.kode_transaksi, b.kode_barang, b.nama_barang, b.harga, b.img, 
+                 k.nama_kategori, dt.qty, dt.harga_total, mt.tanggal_transaksi
+          FROM master_transaksi mt
+          JOIN detail_transaksi dt ON mt.id_transaksi = dt.id_transaksi
+          JOIN master_barang b ON dt.kode_barang = b.kode_barang
+          JOIN master_kategori k ON b.kategori_id = k.kode_kategori
+          WHERE mt.kode_user = :kode_user
+          ORDER BY mt.id_transaksi DESC";
+    
         $stmt = $this->conn->prepare($query);
         $stmt->execute(['kode_user' => $kode_user]);
         return $stmt;
+    }
+
+
+    public function hasComment($kode_transaksi, $user_id)
+    {
+        $sql = "SELECT COUNT(*) FROM products_ratings 
+            WHERE kode_transaksi = :kode_transaksi AND user_id = :user_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            'kode_transaksi' => $kode_transaksi,
+            'user_id' => $user_id
+        ]);
+        return $stmt->fetchColumn() > 0;
     }
 
 
@@ -110,7 +124,7 @@ class Detailtransaksi
             $result = $stmt2->fetch(PDO::FETCH_ASSOC);
 
             if ($result) {
-                $qty = (int)$result['qty'];
+                $qty = (int) $result['qty'];
                 $query3 = "UPDATE master_barang 
                        SET stok = stok - :qty 
                        WHERE kode_barang = :kode_barang";

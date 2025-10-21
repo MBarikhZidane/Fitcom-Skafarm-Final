@@ -14,8 +14,7 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
         <div class="position-absolute start-50 translate-middle-x text-center">
             <a class="navbar-brand me-4 me-lg-5 d-flex align-items-center text-decoration-none"
                 href="index.php?controller=beranda&action=index">
-                <i class="bi bi-cart-check-fill"
-                    style="
+                <i class="bi bi-cart-check-fill" style="
                         font-size: 2.2rem;
                         background: linear-gradient(90deg, #15803d, #22c55e, #4ade80);
                         -webkit-background-clip: text;
@@ -34,25 +33,38 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
             <!-- Sidebar for desktop (md up) -->
             <div class="blog-sidebar d-none d-md-block">
                 <div class="nav flex-column">
-                    <a class="blog-nav-link text-decoration-none" href="index.php?controller=cart&action=mycart"><i class="bi bi-bag"></i> Carts</a>
-                    <a class="blog-nav-link active text-decoration-none" href="index.php?controller=detailtransaksi&action=myhistory"><i class="bi bi-box"></i> History Orders</a>
-                    <a class="blog-nav-link text-decoration-none" href="index.php?controller=blog&action=myblog"><i class="bi bi-card-text"></i> Blog</a>
-                    <a class="blog-nav-link text-decoration-none blog-logout-link" href="index.php?controller=auth&action=logout"><i class="bi bi-box-arrow-left"></i> Logout</a>
+                    <a class="blog-nav-link text-decoration-none" href="index.php?controller=cart&action=mycart"><i
+                            class="bi bi-bag"></i> Carts</a>
+                    <a class="blog-nav-link active text-decoration-none"
+                        href="index.php?controller=detailtransaksi&action=myhistory"><i class="bi bi-box"></i> History
+                        Orders</a>
+                    <a class="blog-nav-link text-decoration-none" href="index.php?controller=blog&action=myblog"><i
+                            class="bi bi-card-text"></i> Blog</a>
+                    <a class="blog-nav-link text-decoration-none blog-logout-link"
+                        href="index.php?controller=auth&action=logout"><i class="bi bi-box-arrow-left"></i> Logout</a>
                 </div>
             </div>
 
             <!-- Sidebar as dropdown (visible only on small devices) -->
             <div class="d-md-none">
-                <button class="btn btn-outline-success w-100 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#blogMobileSidebar" aria-expanded="false" aria-controls="blogMobileSidebar">
+                <button class="btn btn-outline-success w-100 mb-2" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#blogMobileSidebar" aria-expanded="false" aria-controls="blogMobileSidebar">
                     ☰ Menu
                 </button>
 
                 <div class="collapse" id="blogMobileSidebar">
                     <div class="card card-body p-2" style="width: 100%">
-                        <a class="blog-nav-link d-flex gap-2 text-decoration-none" href="index.php?controller=cart&action=mycart"><i class="bi bi-bag"></i> Carts</a>
-                        <a class="blog-nav-link d-flex gap-2 active text-decoration-none" href="index.php?controller=detailtransaksi&action=myhistory"><i style="color: #6c757d;" class="bi bi-box"></i> History Orders</a>
-                        <a class="blog-nav-link active d-flex gap-2 text-decoration-none" href="index.php?controller=blog&action=myblog"><i style="color: #6c757d;" class="bi bi-card-text"></i> Blog</a>
-                        <a class="blog-nav-link blog-logout-link d-flex gap-2 text-decoration-none" href="index.php?controller=auth&action=logout"><i class="bi bi-box-arrow-left"></i> Logout</a>
+                        <a class="blog-nav-link d-flex gap-2 text-decoration-none"
+                            href="index.php?controller=cart&action=mycart"><i class="bi bi-bag"></i> Carts</a>
+                        <a class="blog-nav-link d-flex gap-2 active text-decoration-none"
+                            href="index.php?controller=detailtransaksi&action=myhistory"><i style="color: #6c757d;"
+                                class="bi bi-box"></i> History Orders</a>
+                        <a class="blog-nav-link active d-flex gap-2 text-decoration-none"
+                            href="index.php?controller=blog&action=myblog"><i style="color: #6c757d;"
+                                class="bi bi-card-text"></i> Blog</a>
+                        <a class="blog-nav-link blog-logout-link d-flex gap-2 text-decoration-none"
+                            href="index.php?controller=auth&action=logout"><i class="bi bi-box-arrow-left"></i>
+                            Logout</a>
                     </div>
                 </div>
             </div>
@@ -89,38 +101,85 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
                                     $img = $item['img'];
                                 }
                             }
+                            $alreadyCommented = $this->detailTransaksiModel->hasComment($item['kode_transaksi'], $_SESSION['user_id']);
                             ?>
                             <div class="cart-order-card border rounded-3 shadow-sm bg-white p-3 p-md-4 mb-4">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="badge bg-secondary-subtle text-dark px-3 py-2 rounded-pill">History Order</span>
-                                    <small class="text-muted"><?= date("d M Y", strtotime($item['tanggal_transaksi'] ?? 'now')) ?></small>
+                                    <span class="badge bg-secondary-subtle text-dark px-3 py-2 rounded-pill">History
+                                        Order</span>
+                                    <small
+                                        class="text-muted"><?= date("d M Y", strtotime($item['tanggal_transaksi'] ?? 'now')) ?></small>
                                 </div>
 
-                                <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+                                <div
+                                    class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
                                     <div class="flex-shrink-0">
-                                        <img src="uploads/<?= htmlspecialchars($img) ?>"
-                                            class="rounded-3 img-fluid"
+                                        <img src="uploads/<?= htmlspecialchars($img) ?>" class="rounded-3 img-fluid"
                                             style="width: 90px; height: 90px; object-fit: cover;">
                                     </div>
 
-                                    <div class="flex-grow-1 w-100 d-flex flex-column flex-md-row justify-content-between gap-3">
+                                    <div
+                                        class="flex-grow-1 w-100 d-flex flex-column flex-md-row justify-content-between gap-3">
                                         <div>
                                             <h6 class="fw-semibold mb-1"><?= htmlspecialchars($item['nama_barang']) ?></h6>
-                                            <div class="text-success fw-bold mb-1">Rp <?= number_format($item['harga']) ?></div>
-                                            <div class="text-muted small">Kategori: <?= htmlspecialchars($item['nama_kategori']) ?></div>
+                                            <div class="text-success fw-bold mb-1">Rp <?= number_format($item['harga']) ?>
+                                            </div>
+                                            <div class="text-muted small">Kategori:
+                                                <?= htmlspecialchars($item['nama_kategori']) ?>
+                                            </div>
                                         </div>
 
                                         <div class="text-md-end">
-                                            <div class="small text-muted mb-1">Qty: <?= htmlspecialchars($item['qty']) ?></div>
+                                            <div class="small text-muted mb-1">Qty: <?= htmlspecialchars($item['qty']) ?>
+                                            </div>
                                             <div class="fw-semibold">
-                                                Total: <span class="text-success">Rp <?= number_format($item['harga_total']) ?></span>
+                                                Total: <span class="text-success">Rp
+                                                    <?= number_format($item['harga_total']) ?></span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+                                <?php if (!$alreadyCommented): ?>
+                                    <button type="button"
+                                        class="btn btn-success btn-sm mt-4 px-3 py-1 rounded-pill shadow-sm rating-btn">
+                                        Rating
+                                    </button>
+                                    <form class="card-body p-2" method="POST"
+                                        action="index.php?controller=beranda&action=comment" style="display: none;">
+                                        <div class="mb-4">
+                                            <label class="form-label text-muted small mb-2">Add Your Rating</label>
+                                            <div class="text-secondary fs-4">
+                                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                    <span class="star" style="cursor:pointer; font-size:24px;"
+                                                        data-value="<?= $i ?>">
+                                                        <i class="bi bi-star-fill"></i>
+                                                    </span>
+                                                <?php endfor; ?>
+                                                <input type="hidden" name="kode_transaksi"
+                                                    value="<?= htmlspecialchars((string) ($item['kode_transaksi'] ?? '')) ?>">
+                                                <input type="hidden" id="rating" name="rating" required>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label class="form-label fw-semibold text-dark mb-2">Write Your Review*</label>
+                                            <textarea class="form-control form-control-lg border-2 rounded-3" name="comment"
+                                                rows="4" placeholder="Bagikan pengalaman Anda..." required></textarea>
+                                            <input type="hidden" name="kode_barang"
+                                                value="<?= htmlspecialchars((string) ($item['kode_barang'] ?? '')) ?>">
+                                        </div>
+                                        <div class="d-flex justify-content-center justify-content-md-end">
+                                            <button type="submit"
+                                                class="btn btn-success btn-lg px-3 py-2 fw-bold rounded-3 shadow-sm">
+                                                <i class="bi bi-send me-2"></i>Submit Review
+                                            </button>
+                                        </div>
+                                    </form>
+                                <?php else: ?>
+                                    <div class="mt-3 text-success fw-semibold">Anda sudah memberikan rating.</div>
+                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
-
 
                     </div>
                 </div>
@@ -129,10 +188,42 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 
     </div>
 </div>
-<script
-    src="https://code.jquery.com/jquery-3.7.1.min.js"
-    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-    crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="assets/profil.js"></script>
+<script>
+
+    document.querySelectorAll('.rating-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const form = btn.nextElementSibling;
+            if (form && form.style.display === 'none') {
+                form.style.display = 'block';
+                btn.style.display = 'none';
+            }
+        });
+    });
+
+    document.querySelectorAll('form.card-body').forEach(form => {
+        const stars = form.querySelectorAll('.star');
+        const ratingInput = form.querySelector('input[name="rating"]');
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const value = parseInt(star.getAttribute('data-value'));
+
+                ratingInput.value = value;
+
+                stars.forEach((s, i) => {
+                    if (i < value) {
+                        s.classList.add('selected');
+                    } else {
+                        s.classList.remove('selected');
+                    }
+                });
+            });
+        });
+    });
+</script>
+</script>

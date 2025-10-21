@@ -284,7 +284,7 @@ class Produk
         return $row ? (int) $row['harga'] : 0;
     }
 
-    public function getTransactionkode($kode_user, $kode_barang)
+    public function getTransactionkodeAll($kode_user, $kode_barang)
     {
         $user = (int) $kode_user;
         $barang = (int) $kode_barang;
@@ -293,8 +293,7 @@ class Produk
                 mt.kode_transaksi
             FROM master_transaksi mt
             JOIN detail_transaksi dt ON mt.id_transaksi = dt.id_transaksi
-            WHERE mt.kode_user = :user AND dt.kode_barang = :barang
-            LIMIT 1";
+            WHERE mt.kode_user = :user AND dt.kode_barang = :barang";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
@@ -302,15 +301,15 @@ class Produk
             'barang' => $barang
         ]);
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function checkTransaction($transaksi_kode)
+    public function checkTransactionMultiple(array $transaksi_kodes)
     {
-        $sql = "SELECT COUNT(*) as total FROM products_ratings WHERE kode_transaksi = :kode";
+        $placeholders = implode(',', array_fill(0, count($transaksi_kodes), '?'));
+        $sql = "SELECT COUNT(*) as total FROM products_ratings WHERE kode_transaksi IN ($placeholders)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(['kode' => $transaksi_kode]);
-
+        $stmt->execute($transaksi_kodes);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row['total'] ?? 0;
     }
@@ -390,6 +389,20 @@ class Produk
             'user_id' => $user_id
         ]);
     }
+
+    public function checkCommentByTransaction($kode_transaksi, $user_id)
+    {
+        $sql = "SELECT COUNT(*) FROM products_ratings 
+            WHERE kode_transaksi = :kode_transaksi 
+            AND user_id = :user_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            'kode_transaksi' => $kode_transaksi,
+            'user_id' => $user_id
+        ]);
+        return $stmt->fetchColumn() > 0;
+    }
+
 
 
 }
