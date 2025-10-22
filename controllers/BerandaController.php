@@ -38,10 +38,10 @@ class BerandaController
         require_once(__DIR__ . '/../views/landingPage/beranda.php');
     }
 
-    public function showProductRating($kode_barang)
+    public function showProductRating($kode_produk)
     {
-        $distribution = $this->produkModel->getRatingDistribution($kode_barang);
-        $average = $this->produkModel->getAverageRating($kode_barang);
+        $distribution = $this->produkModel->getRatingDistribution($kode_produk);
+        $average = $this->produkModel->getAverageRating($kode_produk);
 
         $total = $average['total_reviews'] ?? 1;
         $stars = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
@@ -110,11 +110,11 @@ class BerandaController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $rating = intval($_POST['rating'] ?? 0);
             $comment = trim($_POST['comment'] ?? '');
-            $kode_barang = intval($_POST['kode_barang'] ?? 0);
+            $kode_produk = intval($_POST['kode_produk'] ?? 0);
             $kode_transaksi = $_POST['kode_transaksi'] ?? null;
 
-            if (empty($kode_barang) || empty($rating) || empty($comment)) {
-                header("Location: index.php?controller=beranda&action=detail&id=$kode_barang&status=invalid_input");
+            if (empty($kode_produk) || empty($rating) || empty($comment)) {
+                header("Location: index.php?controller=beranda&action=detail&id=$kode_produk&status=invalid_input");
                 exit;
             }
 
@@ -122,16 +122,16 @@ class BerandaController
                 $alreadyCommented = $this->produkModel->checkCommentByTransaction($kode_transaksi, $kode_user);
 
                 if (!$alreadyCommented) {
-                    $this->produkModel->insertComment($kode_user, $rating, $comment, $kode_transaksi, $kode_barang);
-                    header("Location: index.php?controller=beranda&action=detail&id=$kode_barang&status=success");
+                    $this->produkModel->insertComment($kode_user, $rating, $comment, $kode_transaksi, $kode_produk);
+                    header("Location: index.php?controller=beranda&action=detail&id=$kode_produk&status=success");
                 } else {
-                    header("Location: index.php?controller=beranda&action=detail&id=$kode_barang&status=already_commented");
+                    header("Location: index.php?controller=beranda&action=detail&id=$kode_produk&status=already_commented");
                 }
                 exit;
             }
 
             else {
-                $transaksiList = $this->produkModel->getTransactionkodeAll($kode_user, $kode_barang);
+                $transaksiList = $this->produkModel->getTransactionkodeAll($kode_user, $kode_produk);
                 $inserted = false;
 
                 foreach ($transaksiList as $transaksi) {
@@ -140,16 +140,16 @@ class BerandaController
                     $alreadyCommented = $this->produkModel->checkCommentByTransaction($kode_transaksi, $kode_user);
 
                     if (!$alreadyCommented) {
-                        $this->produkModel->insertComment($kode_user, $rating, $comment, $kode_transaksi, $kode_barang);
+                        $this->produkModel->insertComment($kode_user, $rating, $comment, $kode_transaksi, $kode_produk);
                         $inserted = true;
                         break;
                     }
                 }
 
                 if ($inserted) {
-                    header("Location: index.php?controller=beranda&action=detail&id=$kode_barang&status=success");
+                    header("Location: index.php?controller=beranda&action=detail&id=$kode_produk&status=success");
                 } else {
-                    header("Location: index.php?controller=beranda&action=detail&id=$kode_barang&status=already_commented");
+                    header("Location: index.php?controller=beranda&action=detail&id=$kode_produk&status=already_commented");
                 }
                 exit;
             }

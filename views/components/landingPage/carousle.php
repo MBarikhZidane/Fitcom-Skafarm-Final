@@ -4,11 +4,11 @@
             <div class="main-card shadow-sm">
                 <div class="main-content-container">
                     <h1 class="fw-bold  mb-3">
-                        Diskon Besar! Hingga 50% untuk Produk Pertanian
+                        Smart Farming Deals Solusi Hemat untuk Petani Cerdas
                     </h1>
                     <p class="fs-6 mb-0">
-                        Jangan lewatkan promo spesial Smart Farm minggu ini. Nikmati berbagai
-                        penawaran menarik dengan harga yang lebih hemat.
+                        Temukan teknologi dan produk pertanian dengan penawaran terbaik dari sistem Smart Farm.
+                        Promo disesuaikan dengan musim tanam dan kategori produk.
                     </p>
                 </div>
             </div>
@@ -18,11 +18,10 @@
             <div class="side-card side-card-green shadow-sm mb-4">
                 <div class="side-content">
                     <h2 class=" fw-semibold mb-2">
-                        Promo Pupuk Organik – Diskon 30%
+                        Pupuk Organik — Untuk Panen Hebat
                     </h2>
                     <p class="mb-0">
-                        Pupuk ramah lingkungan untuk hasil panen melimpah kini lebih terjangkau.
-                        Hanya berlaku hingga minggu ini
+                        Pupuk ramah lingkungan yang membantu menjaga kesuburan tanah dan meningkatkan hasil panen secara alami.
                     </p>
                 </div>
             </div>
@@ -30,10 +29,10 @@
             <div class="side-card side-card-cream shadow-sm">
                 <div class="side-content">
                     <h2 class=" fw-semibold mb-2">
-                        Benih Unggul – Beli 1 Gratis 1
+                        Benih Unggul — Produktivitas Maksimal
                     </h2>
                     <p class="mb-0">
-                        Dapatkan benih berkualitas tinggi untuk meningkatkan produktivitas lahan Anda.
+                        Pilih benih unggul yang dirancang untuk ketahanan hama dan hasil panen optimal.
 
                     </p>
                 </div>

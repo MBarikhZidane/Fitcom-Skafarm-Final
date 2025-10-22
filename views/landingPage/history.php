@@ -165,8 +165,8 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
                                             <label class="form-label fw-semibold text-dark mb-2">Write Your Review*</label>
                                             <textarea class="form-control form-control-lg border-2 rounded-3" name="comment"
                                                 rows="4" placeholder="Bagikan pengalaman Anda..." required></textarea>
-                                            <input type="hidden" name="kode_barang"
-                                                value="<?= htmlspecialchars((string) ($item['kode_barang'] ?? '')) ?>">
+                                            <input type="hidden" name="kode_produk"
+                                                value="<?= htmlspecialchars((string) ($item['kode_produk'] ?? '')) ?>">
                                         </div>
                                         <div class="d-flex justify-content-center justify-content-md-end">
                                             <button type="submit"

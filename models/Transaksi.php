@@ -24,7 +24,7 @@ class Transaksi
     {
         $sql = "SELECT d.*, b.nama_barang 
                 FROM detail_transaksi d
-                JOIN master_barang b ON d.kode_barang = b.kode_barang
+                JOIN produk b ON d.kode_produk = b.kode_produk
                 WHERE d.id_transaksi = :id_transaksi";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':id_transaksi', $id_transaksi);

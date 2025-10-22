@@ -7,7 +7,7 @@ class DetailtransaksiController
     public function __construct($conn)
     {
         require_once 'models/Cart.php';
-        require_once 'models/Detailtransaksi.php';
+        require_once 'models/DetailTransaksi.php';
 
         $this->cartModel = new Cart($conn);
         $this->detailTransaksiModel = new Detailtransaksi($conn);
@@ -21,8 +21,8 @@ class DetailtransaksiController
 
         $kode_user = $_SESSION['user_id'];
 
-        if (isset($_POST['kode_barang']) && isset($_POST['quantity']) && isset($_POST['stok'])) {
-            $kode_barang = $_POST['kode_barang'];
+        if (isset($_POST['kode_produk']) && isset($_POST['quantity']) && isset($_POST['stok'])) {
+            $kode_produk = $_POST['kode_produk'];
             $qty = (int) $_POST['quantity'];
             $stok = $_POST['stok'];
 
@@ -31,7 +31,7 @@ class DetailtransaksiController
                 exit;
             }
 
-            $harga_satuan = $this->detailTransaksiModel->getHargaBarang($kode_barang);
+            $harga_satuan = $this->detailTransaksiModel->getHargaBarang($kode_produk);
             $total_harga = $harga_satuan * $qty;
 
             $kode_transaksi = 'TRX' . time();
@@ -40,7 +40,7 @@ class DetailtransaksiController
 
             $id_transaksi = $this->detailTransaksiModel->getLastInsertId();
 
-            $this->detailTransaksiModel->insertDetailTransaksi($id_transaksi, $kode_barang, $qty, $harga_satuan, $total_harga);
+            $this->detailTransaksiModel->insertDetailTransaksi($id_transaksi, $kode_produk, $qty, $harga_satuan, $total_harga);
 
             header("Location: index.php?controller=detailtransaksi&action=detail&kode_transaksi=$kode_transaksi");
             exit;
@@ -92,10 +92,10 @@ class DetailtransaksiController
             $kode_transaksi = $_POST['kode_transaksi'];
             $alamat = $_POST['alamat'];
             $metode = $_POST['metode_pembayaran'];
-            $kode_barang = $_POST['kode_barang'];
+            $kode_produk = $_POST['kode_produk'];
 
             try {
-                $result = $this->detailTransaksiModel->updateTransaksi($kode_transaksi, $alamat, $metode, $kode_barang);
+                $result = $this->detailTransaksiModel->updateTransaksi($kode_transaksi, $alamat, $metode, $kode_produk);
 
                 if ($result) {
                     header("Location: index.php?controller=detailtransaksi&action=myhistory&status=success");

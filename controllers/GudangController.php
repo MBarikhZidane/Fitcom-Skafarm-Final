@@ -15,41 +15,52 @@ class GudangController
         $data = $this->model->getAll();
         require_once(__DIR__ . '/../views/dashboard/gudang.php');
     }
-
     public function store()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $kode = $_POST['kode_gudang'];
             $nama = $_POST['nama_gudang'];
             $golongan = $_POST['golongan'];
             $keterangan = $_POST['keterangan'];
 
-            $result = $this->model->create($nama, $golongan, $keterangan);
-            if ($result) {
-                header("Location: index.php?controller=gudang&action=index&status=success");
-            } else {
-                header("Location: index.php?controller=gudang&action=index&status=error");
+            try {
+                $result = $this->model->create($kode, $nama, $golongan, $keterangan);
+                if ($result) {
+                    header("Location: index.php?controller=gudang&action=index&status=success");
+                } else {
+                    header("Location: index.php?controller=gudang&action=index&status=error");
+                }
+            } catch (Exception $e) {
+                header("Location: index.php?controller=gudang&action=index&status=error&message=" . urlencode($e->getMessage()));
             }
             exit;
         }
     }
+
 
     public function update()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = $_POST['kode_gudang'];
+            $kodeLama = $_POST['kode_lama'];
+            $kodeBaru = $_POST['kode_gudang'];
             $nama = $_POST['nama_gudang'];
             $golongan = $_POST['golongan'];
             $keterangan = $_POST['keterangan'];
 
-            $result = $this->model->update($id, $nama, $golongan, $keterangan);
-            if ($result) {
-                header("Location: index.php?controller=gudang&action=index&status=success");
-            } else {
-                header("Location: index.php?controller=gudang&action=index&status=error");
+            try {
+                $result = $this->model->update($kodeLama, $kodeBaru, $nama, $golongan, $keterangan);
+                if ($result) {
+                    header("Location: index.php?controller=gudang&action=index&status=success");
+                } else {
+                    header("Location: index.php?controller=gudang&action=index&status=error");
+                }
+            } catch (Exception $e) {
+                header("Location: index.php?controller=gudang&action=index&status=error&message=" . urlencode($e->getMessage()));
             }
             exit;
         }
     }
+
 
     public function delete()
     {

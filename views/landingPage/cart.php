@@ -64,6 +64,7 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
         <div class="col-md-9">
             <div class="cart-main-content pt-5">
                 <div class="cart-tab-content pb-5 mb-5 px-2 px-md-4" id="cartOrderTabContent">
+
                     <?php if (!empty($_GET['status'])): ?>
                         <?php if ($_GET['status'] === 'error'): ?>
                             <div class="alert alert-danger">
@@ -77,22 +78,24 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
                     <?php endif; ?>
 
                     <div class="tab-pane fade show active" id="cart-all-orders" role="tabpanel">
-                        <form method="POST" action="index.php?controller=detailtransaksi&action=checkout">
 
-                            <?php foreach ($cartItems as $item): ?>
-                                <?php
-                                $img = 'default.jpg';
-                                if (!empty($item['img'])) {
-                                    $decoded = json_decode($item['img'], true);
-                                    if (is_array($decoded) && count($decoded) > 0) {
-                                        $img = $decoded[0];
-                                    } elseif (is_string($item['img'])) {
-                                        $img = $item['img'];
-                                    }
+                        <?php foreach ($cartItems as $item): ?>
+                            <?php
+                            $img = 'default.jpg';
+                            if (!empty($item['img'])) {
+                                $decoded = json_decode($item['img'], true);
+                                if (is_array($decoded) && count($decoded) > 0) {
+                                    $img = $decoded[0];
+                                } elseif (is_string($item['img'])) {
+                                    $img = $item['img'];
                                 }
-                                ?>
+                            }
+                            ?>
+
+                            <form method="POST" action="index.php?controller=detailtransaksi&action=checkout" class="cart-item-form">
                                 <div class="cart-order-card border rounded-3 bg-white p-3 p-md-4 mb-4 shadow-sm">
                                     <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+
                                         <div class="flex-shrink-0 text-center">
                                             <img src="uploads/<?= htmlspecialchars($img) ?>"
                                                 class="rounded-3 img-fluid"
@@ -101,11 +104,17 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 
                                         <div class="flex-grow-1 w-100 d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
                                             <div>
-                                                <input type="hidden" name="kode_barang" value="<?= $item['kode_barang']; ?>">
+                                                <input type="hidden" name="kode_produk" value="<?= $item['kode_produk']; ?>">
                                                 <input type="hidden" name="stok" value="<?= $item['stok']; ?>">
+                                                <input type="hidden" name="quantity" class="cart-hidden-qty" value="1">
+
                                                 <h6 class="fw-semibold mb-1"><?= htmlspecialchars($item['nama_barang']); ?></h6>
-                                                <div class="text-success fw-bold mb-1">Rp <?= number_format($item['harga_satuan']); ?></div>
-                                                <div class="text-muted small mb-2">Kategori: <?= htmlspecialchars($item['nama_kategori']); ?></div>
+                                                <div class="text-success fw-bold mb-1">
+                                                    Rp <?= number_format($item['harga_satuan']); ?>
+                                                </div>
+                                                <div class="text-muted small mb-2">
+                                                    Kategori: <?= htmlspecialchars($item['nama_kategori']); ?>
+                                                </div>
                                                 <a href="index.php?controller=cart&action=delete&id_cart=<?= $item['id_cart']; ?>"
                                                     class="btn btn-sm btn-outline-danger">Hapus</a>
                                             </div>
@@ -113,7 +122,7 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
                                             <div class="d-flex flex-column align-items-md-end gap-2">
                                                 <div class="input-group input-group-sm" style="max-width: 120px;">
                                                     <button class="btn btn-outline-secondary cart-btn-decrease" type="button">-</button>
-                                                    <input type="text" class="form-control text-center cart-quantity-input" name="quantity" value="1">
+                                                    <input type="text" class="form-control text-center cart-quantity-input" value="1">
                                                     <button class="btn btn-outline-secondary cart-btn-increase" type="button">+</button>
                                                 </div>
                                                 <button type="submit" class="btn btn-success btn-sm px-3">Checkout</button>
@@ -121,14 +130,15 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
                                         </div>
                                     </div>
                                 </div>
-                            <?php endforeach; ?>
+                            </form>
 
+                        <?php endforeach; ?>
 
-                        </form>
                     </div>
                 </div>
             </div>
         </div>
+
 
     </div>
 </div>
@@ -142,27 +152,31 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="assets/profil.js"></script>
 <script>
-    $('.cart-order-card').each(function() {
-        const inputQty = $(this).find('.cart-quantity-input');
-        const hiddenQty = $(this).find('.cart-hidden-qty');
+    $(document).ready(function() {
+        $('.cart-order-card').each(function() {
+            const inputQty = $(this).find('.cart-quantity-input');
+            const hiddenQty = $(this).closest('form').find('.cart-hidden-qty');
 
-        $(this).find('.cart-btn-increase').on('click', function() {
-            inputQty.val(parseInt(inputQty.val()) + 1);
-            hiddenQty.val(inputQty.val());
-        });
-
-        $(this).find('.cart-btn-decrease').on('click', function() {
-            if (parseInt(inputQty.val()) > 1) {
-                inputQty.val(parseInt(inputQty.val()) - 1);
+            $(this).find('.cart-btn-increase').on('click', function() {
+                let val = parseInt(inputQty.val()) || 1;
+                inputQty.val(val + 1);
                 hiddenQty.val(inputQty.val());
-            }
-        });
+            });
 
-        inputQty.on('input', function() {
-            let val = parseInt(inputQty.val());
-            if (isNaN(val) || val < 1) val = 1;
-            inputQty.val(val);
-            hiddenQty.val(val);
+            $(this).find('.cart-btn-decrease').on('click', function() {
+                let val = parseInt(inputQty.val()) || 1;
+                if (val > 1) {
+                    inputQty.val(val - 1);
+                    hiddenQty.val(inputQty.val());
+                }
+            });
+
+            inputQty.on('input', function() {
+                let val = parseInt(inputQty.val());
+                if (isNaN(val) || val < 1) val = 1;
+                inputQty.val(val);
+                hiddenQty.val(val);
+            });
         });
     });
 </script>

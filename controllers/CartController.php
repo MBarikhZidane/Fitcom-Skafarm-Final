@@ -33,22 +33,22 @@ class CartController
         if (session_status() === PHP_SESSION_NONE) session_start();
 
         $kode_user   = $_SESSION['user_id'];
-        $kode_barang = $_GET['id'] ?? null;
+        $kode_produk = $_GET['id'] ?? null;
         $qty         = 1;
 
-        if (!$kode_barang) {
+        if (!$kode_produk) {
             header("Location: index.php?controller=cart&action=mycart&status=error");
             exit;
         }
 
-        $harga = $this->barangModel->getHargaBarang($kode_barang);
+        $harga = $this->barangModel->getHargaBarang($kode_produk);
 
         if ($harga <= 0) {
             header("Location: index.php?controller=cart&action=mycart&status=error");
             exit;
         }
 
-        $result = $this->cartModel->addToCart($kode_user, $kode_barang, $qty, $harga);
+        $result = $this->cartModel->addToCart($kode_user, $kode_produk, $qty, $harga);
 
         if ($result) {
             header("Location: index.php?controller=cart&action=mycart&status=success");

@@ -1,5 +1,7 @@
 <?php
+
 require_once(__DIR__ . "/config/database.php");
+
 
 $controller = $_GET['controller'] ?? 'landing'; 
 $action     = $_GET['action'] ?? 'beranda';

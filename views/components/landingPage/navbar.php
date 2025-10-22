@@ -97,13 +97,13 @@
                 <a href="#kategori"
                     class="btn btn-custom btn-lg shadow-sm py-2 px-4 rounded-3 d-flex align-items-center">
                     <i class="bi bi-grid-fill me-2"></i>
-                    Browse All Categories
+                    Lihat Semua Kategori
                 </a>
 
 
                 <ul class="nav mx-auto">
-                    <li class="nav-item"><a href="index.php?controller=beranda&action=index" class="nav-link text-dark fw-semibold px-3">Home</a></li>
-                    <li class="nav-item"><a href="#kategori" class="nav-link text-dark fw-semibold px-3">kategori</a></li>
+                    <li class="nav-item"><a href="index.php?controller=beranda&action=index" class="nav-link text-dark fw-semibold px-3">Beranda</a></li>
+                    <li class="nav-item"><a href="#kategori" class="nav-link text-dark fw-semibold px-3">Kategori</a></li>
                     <li class="nav-item dropdown">
                         <a href="#produk" class="nav-link text-dark fw-semibold px-3">Produk</a>
                     </li>
@@ -114,8 +114,8 @@
                 <div class="d-flex align-items-center">
                     <i class="bi bi-telephone-fill fs-4 text-custom me-2"></i>
                     <div class="text-start">
-                        <span class="d-block small text-muted">Call Us</span>
-                        <span class="d-block fw-bold text-dark">1-888-123-4567</span>
+                        <span class="d-block small text-muted">Hubungi Kami</span>
+                        <span class="d-block fw-bold text-dark">+62 858-5434-2825</span>
                     </div>
                 </div>
             </div>
@@ -131,7 +131,7 @@
 
 
             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                <li class="nav-item"><a href="index.php?controller=beranda&action=index" class="nav-link text-dark fw-semibold px-3">Home</a></li>
+                <li class="nav-item"><a href="index.php?controller=beranda&action=index" class="nav-link text-dark fw-semibold px-3">Beranda</a></li>
                 <li class="nav-item"><a href="#kategori" class="nav-link text-dark fw-semibold px-3">kategori</a></li>
                 <li class="nav-item dropdown">
                     <a href="#produk" class="nav-link text-dark fw-semibold px-3">Produk</a>
@@ -160,8 +160,8 @@
             <div class="d-flex align-items-center mt-4 pt-3 border-top">
                 <i class="bi bi-telephone-fill fs-4 text-custom me-2"></i>
                 <div>
-                    <span class="d-block small text-muted">Call Us</span>
-                    <span class="d-block fw-bold text-dark">1-888-123-4567</span>
+                    <span class="d-block small text-muted">Hubungi Kami</span>
+                    <span class="d-block fw-bold text-dark">+62 858-5434-2825</span>
                 </div>
             </div>
         </div>

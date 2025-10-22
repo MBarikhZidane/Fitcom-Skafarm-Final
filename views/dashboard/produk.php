@@ -125,7 +125,7 @@ foreach ($gudang as $gd) {
             <?php if ($data && $data->rowCount() > 0): ?>
               <?php while ($row = $data->fetch(PDO::FETCH_ASSOC)): ?>
                 <tr>
-                  <td><?= $row['kode_barang'] ?></td>
+                  <td><?= $row['kode_produk'] ?></td>
                   <td>
                     <?php
                     if (!empty($row['img'])):
@@ -152,7 +152,7 @@ foreach ($gudang as $gd) {
                     <button class="action-btn btn-edit"
                       data-bs-toggle="modal"
                       data-bs-target="#productModal"
-                      data-id="<?= $row['kode_barang'] ?>"
+                      data-id="<?= $row['kode_produk'] ?>"
                       data-nama="<?= $row['nama_barang'] ?>"
                       data-satuan="<?= $row['satuan'] ?>"
                       data-harga="<?= $row['harga'] ?>"
@@ -167,7 +167,7 @@ foreach ($gudang as $gd) {
                     <button class="action-btn btn-delete"
                       data-bs-toggle="modal"
                       data-bs-target="#confirmModal"
-                      data-id="<?= $row['kode_barang'] ?>">
+                      data-id="<?= $row['kode_produk'] ?>">
                       <i class="bi bi-trash"></i>
                     </button>
                   </td>
@@ -195,7 +195,13 @@ foreach ($gudang as $gd) {
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <input type="hidden" name="kode_barang" id="kode_barang">
+          <div class="form-group mb-3">
+            <label class="form-label">Kode Produk</label>
+            <input type="text" class="form-control" name="kode_produk" id="kode_produk" required>
+          </div>
+          <input type="hidden" name="kode_lama" id="kode_lama">
+
+
 
           <div class="row">
             <div class="col-md-6">
@@ -407,7 +413,8 @@ foreach ($gudang as $gd) {
 
     $('.btn-edit').on('click', function() {
 
-      $('#kode_barang').val($(this).data('id'));
+      $('#kode_produk').val($(this).data('id'));
+      $('#kode_lama').val($(this).data('id'));
       $('#nama_barang').val($(this).data('nama'));
       $('#satuan').val($(this).data('satuan'));
       $('#harga').val($(this).data('harga'));

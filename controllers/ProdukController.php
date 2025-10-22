@@ -40,28 +40,38 @@ class ProdukController
     public function store()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $result = $this->produkModel->create($_POST, $_FILES);
-            if ($result) {
-                header("Location: index.php?controller=produk&action=index&status=success");
-            } else {
-                header("Location: index.php?controller=produk&action=index&status=error");
+            try {
+                $result = $this->produkModel->create($_POST, $_FILES);
+                if ($result) {
+                    header("Location: index.php?controller=produk&action=index&status=success");
+                } else {
+                    header("Location: index.php?controller=produk&action=index&status=error");
+                }
+            } catch (Exception $e) {
+                header("Location: index.php?controller=produk&action=index&status=error&message=" . urlencode($e->getMessage()));
             }
             exit;
         }
     }
 
+
     public function update()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $result = $this->produkModel->update($_POST, $_FILES);
-            if ($result) {
-                header("Location: index.php?controller=produk&action=index&status=success");
-            } else {
-                header("Location: index.php?controller=produk&action=index&status=error");
+            try {
+                $result = $this->produkModel->update($_POST, $_FILES);
+                if ($result) {
+                    header("Location: index.php?controller=produk&action=index&status=success");
+                } else {
+                    header("Location: index.php?controller=produk&action=index&status=error");
+                }
+            } catch (Exception $e) {
+                header("Location: index.php?controller=produk&action=index&status=error&message=" . urlencode($e->getMessage()));
             }
             exit;
         }
     }
+
 
     public function delete()
     {
@@ -75,6 +85,4 @@ class ProdukController
             exit;
         }
     }
-
-    
 }

@@ -2,7 +2,7 @@
 class Produk
 {
     private $conn;
-    private $table = "master_barang";
+    private $table = "produk";
 
     public function __construct($db)
     {
@@ -15,9 +15,10 @@ class Produk
         $params = [];
 
         if (!empty($filters['search'])) {
-            $where[] = "p.nama_barang LIKE :search";
+            $where[] = "(p.nama_barang LIKE :search OR p.kode_produk LIKE :search)";
             $params['search'] = "%" . $filters['search'] . "%";
         }
+
 
         if (!empty($filters['satuan'])) {
             $where[] = "p.satuan = :satuan";
@@ -42,7 +43,7 @@ class Produk
         $sql = "SELECT p.*, k.nama_kategori, g.nama_gudang
                 FROM {$this->table} p
                 LEFT JOIN master_kategori k ON p.kategori_id = k.kode_kategori
-                LEFT JOIN master_gudang g ON p.kode_gudang = g.kode_gudang
+                LEFT JOIN gudang g ON p.kode_gudang = g.kode_gudang
                 $whereSql";
 
         $stmt = $this->conn->prepare($sql);
@@ -53,16 +54,16 @@ class Produk
     public function getAll()
     {
         $sql = "SELECT p.*, k.nama_kategori, g.nama_gudang
-                FROM master_barang p
+                FROM produk p
                 LEFT JOIN master_kategori k ON p.kategori_id = k.kode_kategori
-                LEFT JOIN master_gudang g ON p.kode_gudang = g.kode_gudang";
+                LEFT JOIN gudang g ON p.kode_gudang = g.kode_gudang";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt;
     }
-
     public function create($data, $files)
     {
+        $kode = $data['kode_produk'];
         $nama = $data['nama_barang'];
         $satuan = $data['satuan'];
         $harga = $data['harga'];
@@ -70,6 +71,12 @@ class Produk
         $kategori = $data['kategori_id'];
         $gudang = $data['kode_gudang'];
         $deskripsi = $data['deskripsi'];
+
+        $check = $this->conn->prepare("SELECT COUNT(*) FROM produk WHERE kode_produk = :kode");
+        $check->execute(['kode' => $kode]);
+        if ($check->fetchColumn() > 0) {
+            throw new Exception("Kode produk sudah digunakan, gunakan kode lain.");
+        }
 
         if (!isset($files['img']) || count(array_filter($files['img']['name'])) !== 4) {
             throw new Exception("Harus mengupload tepat 4 gambar.");
@@ -86,10 +93,11 @@ class Produk
         }
 
         $sql = "INSERT INTO {$this->table}
-            (nama_barang, satuan, harga, stok, kategori_id, kode_gudang, deskripsi, img)
-            VALUES (:nama, :satuan, :harga, :stok, :kategori, :gudang, :deskripsi, :img)";
+        (kode_produk, nama_barang, satuan, harga, stok, kategori_id, kode_gudang, deskripsi, img)
+        VALUES (:kode, :nama, :satuan, :harga, :stok, :kategori, :gudang, :deskripsi, :img)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
+            'kode' => $kode,
             'nama' => $nama,
             'satuan' => $satuan,
             'harga' => $harga,
@@ -101,9 +109,14 @@ class Produk
         ]);
     }
 
+
+
+
     public function update($data, $files)
     {
-        $id = $data['kode_barang'];
+        $kodeBaru = $data['kode_produk'];
+        $kodeLama = $data['kode_lama'];
+
         $nama = $data['nama_barang'];
         $satuan = $data['satuan'];
         $harga = $data['harga'];
@@ -111,6 +124,14 @@ class Produk
         $kategori = $data['kategori_id'];
         $gudang = $data['kode_gudang'];
         $deskripsi = $data['deskripsi'];
+
+        $check = $this->conn->prepare("SELECT COUNT(*) FROM produk WHERE kode_produk = :kode_lama");
+        $check->execute(['kode_lama' => $kodeBaru]);
+        if ($check->fetchColumn() > 0 && $kodeBaru !== $kodeLama) {
+            throw new Exception("Kode produk sudah digunakan, gunakan kode lain.");
+        }
+
+
 
         $oldImages = [];
         if (!empty($data['old_images'])) {
@@ -134,9 +155,8 @@ class Produk
                 }
             }
 
-            // hapus file lama yang tidak lagi dipakai
-            $stmtOld = $this->conn->prepare("SELECT img FROM {$this->table} WHERE kode_barang = :id");
-            $stmtOld->execute(['id' => $id]);
+            $stmtOld = $this->conn->prepare("SELECT img FROM {$this->table} WHERE kode_produk = :kode_lama");
+            $stmtOld->execute(['kode_lama' => $kodeLama]);
             $oldRow = $stmtOld->fetch(PDO::FETCH_ASSOC);
             if ($oldRow) {
                 $previous = json_decode($oldRow['img'], true);
@@ -157,18 +177,20 @@ class Produk
         }
 
         $sql = "UPDATE {$this->table} SET 
-        nama_barang = :nama,
-        satuan = :satuan,
-        harga = :harga,
-        stok = :stok,
-        kategori_id = :kategori,
-        kode_gudang = :gudang,
-        deskripsi = :deskripsi,
-        img = :img
-        WHERE kode_barang = :id";
+          kode_produk = :kode_baru,
+    nama_barang = :nama,
+    satuan = :satuan,
+    harga = :harga,
+    stok = :stok,
+    kategori_id = :kategori,
+    kode_gudang = :gudang,
+    deskripsi = :deskripsi,
+    img = :img
+    WHERE kode_produk = :kode_lama";
 
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
+            'kode_baru' => $kodeBaru,
             'nama' => $nama,
             'satuan' => $satuan,
             'harga' => $harga,
@@ -177,14 +199,14 @@ class Produk
             'gudang' => $gudang,
             'deskripsi' => $deskripsi,
             'img' => json_encode(array_values($newImages)),
-            'id' => $id
+            'kode_lama' => $kodeLama
         ]);
     }
 
 
     public function delete($id)
     {
-        $stmtOld = $this->conn->prepare("SELECT img FROM {$this->table} WHERE kode_barang = :id");
+        $stmtOld = $this->conn->prepare("SELECT img FROM {$this->table} WHERE kode_produk = :id");
         $stmtOld->execute(['id' => $id]);
         $row = $stmtOld->fetch(PDO::FETCH_ASSOC);
 
@@ -199,7 +221,7 @@ class Produk
             }
         }
 
-        $sql = "DELETE FROM {$this->table} WHERE kode_barang = :id";
+        $sql = "DELETE FROM {$this->table} WHERE kode_produk = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute(['id' => $id]);
     }
@@ -227,9 +249,9 @@ class Produk
         $sql = "SELECT b.*, k.nama_kategori, IFNULL(SUM(d.qty), 0) as total_terjual
                 FROM {$this->table} b
                 LEFT JOIN master_kategori k ON b.kategori_id = k.kode_kategori
-                LEFT JOIN detail_transaksi d ON b.kode_barang = d.kode_barang
-                GROUP BY b.kode_barang
-                ORDER BY b.kode_barang DESC";
+                LEFT JOIN detail_transaksi d ON b.kode_produk = d.kode_produk
+                GROUP BY b.kode_produk
+                ORDER BY b.kode_produk DESC";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt;
@@ -239,11 +261,11 @@ class Produk
     {
         $sql = "SELECT b.*, k.nama_kategori, 
                    IFNULL(SUM(d.qty), 0) AS total_terjual
-            FROM master_barang b
+            FROM produk b
             LEFT JOIN master_kategori k ON b.kategori_id = k.kode_kategori
-            LEFT JOIN detail_transaksi d ON b.kode_barang = d.kode_barang
+            LEFT JOIN detail_transaksi d ON b.kode_produk = d.kode_produk
             WHERE b.nama_barang LIKE :keyword
-            GROUP BY b.kode_barang";
+            GROUP BY b.kode_produk";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['keyword' => "%$keyword%"]);
         return $stmt;
@@ -252,9 +274,9 @@ class Produk
     public function findById($id)
     {
         $sql = "SELECT b.*, k.nama_kategori
-            FROM master_barang b
+            FROM produk b
             LEFT JOIN master_kategori k ON b.kategori_id = k.kode_kategori
-            WHERE b.kode_barang = :id
+            WHERE b.kode_produk = :id
             LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['id' => $id]);
@@ -264,36 +286,36 @@ class Produk
     public function getByKategori($kategoriId)
     {
         $sql = "SELECT b.*, k.nama_kategori, IFNULL(SUM(d.qty), 0) AS total_terjual
-            FROM master_barang b
+            FROM produk b
             LEFT JOIN master_kategori k ON b.kategori_id = k.kode_kategori
-            LEFT JOIN detail_transaksi d ON b.kode_barang = d.kode_barang
+            LEFT JOIN detail_transaksi d ON b.kode_produk = d.kode_produk
             WHERE b.kategori_id = :kategoriId
-            GROUP BY b.kode_barang
-            ORDER BY b.kode_barang DESC";
+            GROUP BY b.kode_produk
+            ORDER BY b.kode_produk DESC";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['kategoriId' => $kategoriId]);
         return $stmt;
     }
 
-    public function getHargaBarang($kode_barang)
+    public function getHargaBarang($kode_produk)
     {
-        $sql = "SELECT harga FROM master_barang WHERE kode_barang = :kode";
+        $sql = "SELECT harga FROM produk WHERE kode_produk = :kode";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(['kode' => $kode_barang]);
+        $stmt->execute(['kode' => $kode_produk]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ? (int) $row['harga'] : 0;
     }
 
-    public function getTransactionkodeAll($kode_user, $kode_barang)
+    public function getTransactionkodeAll($kode_user, $kode_produk)
     {
         $user = (int) $kode_user;
-        $barang = (int) $kode_barang;
+        $barang = (int) $kode_produk;
 
         $sql = "SELECT 
                 mt.kode_transaksi
             FROM master_transaksi mt
             JOIN detail_transaksi dt ON mt.id_transaksi = dt.id_transaksi
-            WHERE mt.kode_user = :user AND dt.kode_barang = :barang";
+            WHERE mt.kode_user = :user AND dt.kode_produk = :barang";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
@@ -307,24 +329,24 @@ class Produk
     public function checkTransactionMultiple(array $transaksi_kodes)
     {
         $placeholders = implode(',', array_fill(0, count($transaksi_kodes), '?'));
-        $sql = "SELECT COUNT(*) as total FROM products_ratings WHERE kode_transaksi IN ($placeholders)";
+        $sql = "SELECT COUNT(*) as total FROM produks_ratings WHERE kode_transaksi IN ($placeholders)";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($transaksi_kodes);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row['total'] ?? 0;
     }
 
-    public function insertComment($user_id, $rating, $comment, $transaksi_kode, $kode_barang)
+    public function insertComment($user_id, $rating, $comment, $transaksi_kode, $kode_produk)
     {
-        $sql = "INSERT INTO products_ratings 
-            (kode_transaksi, user_id, kode_barang, rating, comment, created_at) 
-            VALUES (:kode_transaksi, :user_id, :kode_barang, :rating, :comment, CURDATE())";
+        $sql = "INSERT INTO produks_ratings 
+            (kode_transaksi, user_id, kode_produk, rating, comment, created_at) 
+            VALUES (:kode_transaksi, :user_id, :kode_produk, :rating, :comment, CURDATE())";
 
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             'kode_transaksi' => $transaksi_kode,
             'user_id' => $user_id,
-            'kode_barang' => $kode_barang,
+            'kode_produk' => $kode_produk,
             'rating' => $rating,
             'comment' => $comment
         ]);
@@ -334,55 +356,55 @@ class Produk
     {
         if ($user_id) {
             $sql = "SELECT pr.*, mu.username 
-                FROM products_ratings pr 
-                JOIN master_barang mb ON pr.kode_barang = mb.kode_barang 
+                FROM produks_ratings pr 
+                JOIN produk mb ON pr.kode_produk = mb.kode_produk 
                 JOIN master_user mu ON pr.user_id = mu.kode_user 
-                WHERE pr.kode_barang = :kode_barang
+                WHERE pr.kode_produk = :kode_produk
                 ORDER BY (pr.user_id = :user_id) DESC, pr.created_at DESC";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute([
-                'kode_barang' => $id,
+                'kode_produk' => $id,
                 'user_id' => $user_id
             ]);
         } else {
             $sql = "SELECT pr.*, mu.username 
-                FROM products_ratings pr 
-                JOIN master_barang mb ON pr.kode_barang = mb.kode_barang 
+                FROM produks_ratings pr 
+                JOIN produk mb ON pr.kode_produk = mb.kode_produk 
                 JOIN master_user mu ON pr.user_id = mu.kode_user 
-                WHERE pr.kode_barang = :kode_barang
+                WHERE pr.kode_produk = :kode_produk
                 ORDER BY pr.created_at DESC";
             $stmt = $this->conn->prepare($sql);
-            $stmt->execute(['kode_barang' => $id]);
+            $stmt->execute(['kode_produk' => $id]);
         }
 
         return $stmt;
     }
 
 
-    public function getRatingDistribution($kode_barang)
+    public function getRatingDistribution($kode_produk)
     {
         $sql = "SELECT rating, COUNT(*) as total 
-                FROM products_ratings 
-                WHERE kode_barang = :kode_barang
+                FROM produks_ratings 
+                WHERE kode_produk = :kode_produk
                 GROUP BY rating";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(['kode_barang' => $kode_barang]);
+        $stmt->execute(['kode_produk' => $kode_produk]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getAverageRating($kode_barang)
+    public function getAverageRating($kode_produk)
     {
         $sql = "SELECT AVG(rating) as avg_rating, COUNT(*) as total_reviews
-                FROM products_ratings 
-                WHERE kode_barang = :kode_barang";
+                FROM produks_ratings 
+                WHERE kode_produk = :kode_produk";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(['kode_barang' => $kode_barang]);
+        $stmt->execute(['kode_produk' => $kode_produk]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function deleteRating($rating_id, $user_id)
     {
-        $sql = "DELETE FROM products_ratings WHERE id_rating = :id_rating AND user_id = :user_id";
+        $sql = "DELETE FROM produks_ratings WHERE id_rating = :id_rating AND user_id = :user_id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             'id_rating' => $rating_id,
@@ -392,7 +414,7 @@ class Produk
 
     public function checkCommentByTransaction($kode_transaksi, $user_id)
     {
-        $sql = "SELECT COUNT(*) FROM products_ratings 
+        $sql = "SELECT COUNT(*) FROM produks_ratings 
             WHERE kode_transaksi = :kode_transaksi 
             AND user_id = :user_id";
         $stmt = $this->conn->prepare($sql);
@@ -402,7 +424,4 @@ class Produk
         ]);
         return $stmt->fetchColumn() > 0;
     }
-
-
-
 }

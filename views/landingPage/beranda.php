@@ -18,8 +18,7 @@ if (!empty($row['img'])) {
 <?php require_once(__DIR__ . "/../components/landingPage/navbar.php"); ?>
 <?php require_once(__DIR__ . "/../components/landingPage/carousle.php"); ?>
 
-<!-- Kategori -->
-<div class="custom-container my-4" id="kategori">
+<section class="custom-container my-4" id="kategori">
     <div class="featured-header d-flex justify-content-between align-items-center mb-4 flex-wrap">
         <h2 class="mb-2 mb-md-0">Kategori Tersedia</h2>
         <div class="nav-buttons d-flex gap-2">
@@ -54,10 +53,9 @@ if (!empty($row['img'])) {
             <?php endif; ?>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Produk -->
-<div class="custom-container" id="produk">
+<section class="custom-container" id="produk">
     <div class="mb-4">
         <h2 class="fw-bold m-0">Semua Produk</h2>
     </div>
@@ -86,7 +84,7 @@ if (!empty($row['img'])) {
                         <div class="product-details">
                             <p class="product-category"><?= htmlspecialchars($row['nama_kategori'] ?? '-') ?></p>
                             <h5 class="product-title">
-                                <a href="index.php?controller=beranda&action=detail&id=<?= $row['kode_barang'] ?>">
+                                <a href="index.php?controller=beranda&action=detail&id=<?= $row['kode_produk'] ?>">
                                     <?= htmlspecialchars($row['nama_barang']) ?>
                                 </a>
                             </h5>
@@ -95,21 +93,24 @@ if (!empty($row['img'])) {
                             </p>
                             <p class="product-brand mb-0 mt-1">Oleh SkaFarm</p>
                         </div>
-                        <div class="product-footer d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="product-price">Rp<?= number_format($row['harga'], 0, ',', '.') ?></span>
+                        <div class="product-footer d-flex flex-wrap flex-md-nowrap justify-content-between align-items-center gap-2">
+                            <div class="text-success fw-semibold">
+                                Rp<?= number_format($row['harga'], 0, ',', '.') ?>
                             </div>
+
                             <?php if (isset($_SESSION['username'])): ?>
-                                <a href="index.php?controller=cart&action=add&id=<?= $row['kode_barang'] ?>"
-                                    class="btn-add-to-cart">
+                                <a href="index.php?controller=cart&action=add&id=<?= $row['kode_produk'] ?>"
+                                    class="btn-add-to-cart btn btn-sm btn-success px-3 py-1">
                                     <i class="bi bi-cart-plus me-1"></i> Add
                                 </a>
                             <?php else: ?>
-                                <a href="index.php?controller=auth&action=showLogin" class="btn-add-to-cart">
+                                <a href="index.php?controller=auth&action=showLogin"
+                                    class="btn-add-to-cart btn btn-sm btn-outline-success px-3 py-1">
                                     <i class="bi bi-cart-plus me-1"></i> Add
                                 </a>
                             <?php endif; ?>
                         </div>
+
                     </div>
                 </div>
             <?php endwhile; ?>
@@ -118,11 +119,10 @@ if (!empty($row['img'])) {
         <?php endif; ?>
     </div>
 
-</div>
+</section>
 
 
-<!-- Tentang Kami -->
-<div class="custom-container" id="tentang">
+<section class="custom-container" id="tentang">
     <!-- Bagian Header (Judul dan Deskripsi) -->
     <div class="row mt-5">
         <div class="col-12">
@@ -187,10 +187,9 @@ if (!empty($row['img'])) {
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Blog -->
-<div class="custom-max-width-wrapper mt-5 py-5" id="blog">
+<section class="custom-max-width-wrapper mt-5 py-5" id="blog">
     <div class="text-center mb-5">
         <h1 class="section-title display-5 mb-2" style="color: var(--primary-color)">
             Jurnal Pertanian Cerdas
@@ -288,7 +287,7 @@ if (!empty($row['img'])) {
             <p class="text-muted">Belum ada artikel tersedia.</p>
         <?php endif; ?>
     </div>
-</div>
+</section>
 
 
 <?php require_once(__DIR__ . "/../components/landingPage/modal.php"); ?>

@@ -11,9 +11,9 @@ class Kategori
 
     public function getAll()
     {
-        $sql = "SELECT k.*, COUNT(b.kode_barang) AS total_produk
+        $sql = "SELECT k.*, COUNT(b.kode_produk) AS total_produk
                 FROM master_kategori k
-                LEFT JOIN master_barang b ON k.kode_kategori = b.kategori_id
+                LEFT JOIN produk b ON k.kode_kategori = b.kategori_id
                 GROUP BY k.kode_kategori";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();

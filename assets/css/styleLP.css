@@ -13,6 +13,11 @@ body {
   width: 100%;
 }
 
+section {
+  scroll-margin-top: 150px; 
+}
+
+
 .thumb-img {
   width: 100%;
   max-width: calc(25% - 6px);
@@ -31,7 +36,6 @@ body {
   border: 2px solid #000;
 }
 
-/* ✅ Tombol navigasi disesuaikan dengan contoh gambar */
 .nav-btn {
   z-index: 5;
   width: 36px;
@@ -159,9 +163,8 @@ body {
 }
 
 .category-item.active {
-  border: 2px solid #3bb67c; /* hijau highlight */
-  box-shadow: 0 0 8px rgba(59, 182, 124, 0.5);
-  transform: scale(1.05);
+  border: 1px solid #3bb67c; 
+  box-shadow: 0 0 3px rgba(59, 182, 124, 0.5);
   transition: all 0.2s ease-in-out;
 }
 
@@ -277,7 +280,7 @@ body {
   transition: transform 0.2s, box-shadow 0.2s;
 }
 .category-item:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 .bg-color-1 {
@@ -462,6 +465,33 @@ body {
   border-top: 1px solid #f0f0f0;
   margin-top: auto;
 }
+
+.product-footer {
+  margin-top: .75rem;
+  font-size: .95rem;
+}
+
+.btn-add-to-cart {
+  border-radius: 10px;
+  transition: all .2s ease-in-out;
+}
+
+.btn-add-to-cart:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 576px) {
+  .product-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    text-align: center;
+  }
+  .btn-add-to-cart {
+    width: 100%;
+  }
+}
+
 
 .product-price {
   font-size: 1.1rem;

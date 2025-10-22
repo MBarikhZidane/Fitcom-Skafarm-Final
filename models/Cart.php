@@ -13,7 +13,7 @@ class Cart
     {
         $query = "SELECT c.id_cart, c.*, b.nama_barang, b.harga, b.img, k.nama_kategori, b.stok
               FROM master_cart c
-              JOIN master_barang b ON c.kode_barang = b.kode_barang
+              JOIN produk b ON c.kode_produk = b.kode_produk
               JOIN master_kategori k ON b.kategori_id = k.kode_kategori
               WHERE c.kode_user = :kode_user";
         $stmt = $this->conn->prepare($query);
@@ -33,30 +33,30 @@ class Cart
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function addToCart($kode_user, $kode_barang, $qty, $harga)
+    public function addToCart($kode_user, $kode_produk, $qty, $harga)
     {
         $subtotal = $qty * $harga;
-        $query = "SELECT * FROM master_cart WHERE kode_user = :kode_user AND kode_barang = :kode_barang";
+        $query = "SELECT * FROM master_cart WHERE kode_user = :kode_user AND kode_produk = :kode_produk";
         $stmt = $this->conn->prepare($query);
-        $stmt->execute(['kode_user' => $kode_user, 'kode_barang' => $kode_barang]);
+        $stmt->execute(['kode_user' => $kode_user, 'kode_produk' => $kode_produk]);
         if ($stmt->rowCount() > 0) {
             $query = "UPDATE master_cart 
                       SET qty = qty + :qty, subtotal = subtotal + :subtotal
-                      WHERE kode_user = :kode_user AND kode_barang = :kode_barang";
+                      WHERE kode_user = :kode_user AND kode_produk = :kode_produk";
             $stmt = $this->conn->prepare($query);
             return $stmt->execute([
                 'qty' => $qty,
                 'subtotal' => $subtotal,
                 'kode_user' => $kode_user,
-                'kode_barang' => $kode_barang
+                'kode_produk' => $kode_produk
             ]);
         } else {
-            $query = "INSERT INTO master_cart (kode_user, kode_barang, qty, harga_satuan, subtotal)
-                      VALUES (:kode_user, :kode_barang, :qty, :harga, :subtotal)";
+            $query = "INSERT INTO master_cart (kode_user, kode_produk, qty, harga_satuan, subtotal)
+                      VALUES (:kode_user, :kode_produk, :qty, :harga, :subtotal)";
             $stmt = $this->conn->prepare($query);
             return $stmt->execute([
                 'kode_user' => $kode_user,
-                'kode_barang' => $kode_barang,
+                'kode_produk' => $kode_produk,
                 'qty' => $qty,
                 'harga' => $harga,
                 'subtotal' => $subtotal
@@ -64,11 +64,11 @@ class Cart
         }
     }
 
-    public function getHargaBarang($kode_barang)
+    public function getHargaBarang($kode_produk)
     {
-        $query = "SELECT harga FROM master_barang WHERE kode_barang = :kode_barang";
+        $query = "SELECT harga FROM produk WHERE kode_produk = :kode_produk";
         $stmt = $this->conn->prepare($query);
-        $stmt->execute(['kode_barang' => $kode_barang]);
+        $stmt->execute(['kode_produk' => $kode_produk]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         return $data ? $data['harga'] : 0;
     }

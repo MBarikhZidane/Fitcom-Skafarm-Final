@@ -21,6 +21,7 @@
     $(document).ready(function() {
         const urlParams = new URLSearchParams(window.location.search);
         const status = urlParams.get('status');
+        const message = urlParams.get('message');
 
         if (status) {
             const alertModal = new bootstrap.Modal($('#alertModal')[0]);
@@ -31,11 +32,11 @@
             if (status === 'success') {
                 alertIcon.html('<i class="bi bi-check-circle-fill text-success"></i>');
                 alertTitle.text('Berhasil!');
-                alertMessage.text('Operasi berhasil dilakukan.');
+                alertMessage.text(message ? decodeURIComponent(message) : 'Operasi berhasil dilakukan.');
             } else if (status === 'error') {
                 alertIcon.html('<i class="bi bi-x-circle-fill text-danger"></i>');
                 alertTitle.text('Gagal!');
-                alertMessage.text('Terjadi kesalahan, coba lagi.');
+                alertMessage.text(message ? decodeURIComponent(message) : 'Terjadi kesalahan, coba lagi.');
             }
 
             alertModal.show();

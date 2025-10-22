@@ -83,7 +83,7 @@ if (empty($imgs)) {
                             <?php if ($product['stok'] > 0): ?>
                                 <form method="POST" action="index.php?controller=detailtransaksi&action=checkout"
                                     class="flex-grow-1">
-                                    <input type="hidden" name="kode_barang" value="<?= $product['kode_barang']; ?>">
+                                    <input type="hidden" name="kode_produk" value="<?= $product['kode_produk']; ?>">
                                     <input type="hidden" name="quantity" value="1">
                                     <input type="hidden" name="stok" value="<?= $product['stok']; ?>">
                                     <button type="submit" class="btn btn-success w-100">
@@ -91,7 +91,7 @@ if (empty($imgs)) {
                                     </button>
                                 </form>
 
-                                <a href="index.php?controller=cart&action=add&id=<?= $product['kode_barang'] ?>"
+                                <a href="index.php?controller=cart&action=add&id=<?= $product['kode_produk'] ?>"
                                     class="btn btn-outline-success flex-grow-1">
                                     <i class="bi bi-cart-plus me-1"></i> Tambah Keranjang
                                 </a>
@@ -278,8 +278,8 @@ if (empty($imgs)) {
                                 <label class="form-label fw-semibold text-dark mb-2">Write Your Review*</label>
                                 <textarea class="form-control form-control-lg border-2 rounded-3" name="comment" rows="6"
                                     placeholder="Bagikan pengalaman Anda..." required></textarea>
-                                <input type="hidden" name="kode_barang"
-                                    value="<?= htmlspecialchars($product['kode_barang']) ?>">
+                                <input type="hidden" name="kode_produk"
+                                    value="<?= htmlspecialchars($product['kode_produk']) ?>">
                             </div>
                             <div class="d-flex justify-content-center justify-content-md-end">
                                 <button type="submit" class="btn btn-success btn-lg px-3 py-2 fw-bold rounded-3 shadow-sm">

@@ -77,7 +77,13 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <input type="hidden" name="kode_gudang" id="kode_gudang">
+          <div class="form-group mb-3">
+            <label class="form-label">Kode Gudang</label>
+            <input type="text" class="form-control" name="kode_gudang" id="kode_gudang" required>
+          </div>
+          <input type="hidden" name="kode_lama" id="kode_lama">
+
+
           <div class="form-group mb-3">
             <label class="form-label">Nama Gudang</label>
             <input type="text" class="form-control" name="nama_gudang" id="nama_gudang" required>
@@ -140,6 +146,7 @@
     });
 
     $('.btn-edit').on('click', function() {
+      $('#kode_lama').val($(this).data('id'));
       $('#kode_gudang').val($(this).data('id'));
       $('#nama_gudang').val($(this).data('nama'));
       $('#golongan').val($(this).data('golongan'));
