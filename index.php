@@ -3,7 +3,7 @@
 require_once(__DIR__ . "/config/database.php");
 
 
-$controller = $_GET['controller'] ?? 'landing'; 
+$controller = $_GET['controller'] ?? 'landing';
 $action     = $_GET['action'] ?? 'beranda';
 $id         = $_GET['id'] ?? null;
 
@@ -44,6 +44,26 @@ switch ($controller) {
                 break;
         }
         break;
+
+    case 'kendaraan':
+        require_once(__DIR__ . "/controllers/KendaraanController.php");
+        $kendaraanController = new KendaraanController($conn);
+        switch ($action) {
+            case 'index':
+                $kendaraanController->index();
+                break;
+            case 'store':
+                $kendaraanController->store();
+                break;
+            case 'update':
+                $kendaraanController->update();
+                break;
+            case 'delete':
+                $kendaraanController->delete();
+                break;
+        }
+        break;
+
 
     case 'gudang':
         require_once(__DIR__ . "/controllers/GudangController.php");
@@ -180,6 +200,20 @@ switch ($controller) {
                 break;
         }
         break;
+
+    case 'pengiriman':
+        require_once(__DIR__ . "/controllers/PengirimanController.php");
+        $controller = new PengirimanController($conn);
+        switch ($action) {
+            case 'index':
+                $controller->index();
+                break;
+            case 'store':
+                $controller->store();
+                break;
+        }
+        break;
+
 
     case 'beranda':
         require_once(__DIR__ . "/controllers/BerandaController.php");

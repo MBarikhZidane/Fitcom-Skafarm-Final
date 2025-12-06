@@ -18,8 +18,9 @@
             <tr>
               <th>Kode Gudang</th>
               <th>Nama Gudang</th>
-              <th>Golongan</th>
-              <th>Keterangan</th>
+              <th>Alamat</th>
+              <th>Kapasitas m²</th>
+              <th>Kontak</th>
               <th>Jumlah Produk</th>
               <th>Aksi</th>
             </tr>
@@ -30,8 +31,9 @@
                 <tr>
                   <td><?= $row['kode_gudang'] ?></td>
                   <td><?= $row['nama_gudang'] ?></td>
-                  <td><?= $row['golongan'] ?></td>
-                  <td><?= $row['keterangan'] ?></td>
+                  <td><?= $row['alamat'] ?></td>
+                  <td><?= $row['kapasitas'] ?></td>
+                  <td><?= $row['kontak'] ?></td>
                   <td><?= $row['total_produk'] ?> produk</td>
                   <td>
                     <button class="action-btn btn-edit"
@@ -39,8 +41,9 @@
                       data-bs-target="#gudangModal"
                       data-id="<?= $row['kode_gudang'] ?>"
                       data-nama="<?= $row['nama_gudang'] ?>"
-                      data-golongan="<?= $row['golongan'] ?>"
-                      data-keterangan="<?= $row['keterangan'] ?>">
+                      data-alamat="<?= $row['alamat'] ?>"
+                      data-kapasitas="<?= $row['kapasitas'] ?>"
+                      data-kontak="<?= $row['kontak'] ?>">
                       <i class="bi bi-pencil-square"></i>
                     </button>
                     <button class="action-btn btn-delete"
@@ -89,12 +92,16 @@
             <input type="text" class="form-control" name="nama_gudang" id="nama_gudang" required>
           </div>
           <div class="form-group mb-3">
-            <label class="form-label">Golongan</label>
-            <input type="text" class="form-control" name="golongan" id="golongan" required>
+            <label class="form-label">Alamat</label>
+            <input type="text" class="form-control" name="alamat" id="alamat" required>
           </div>
           <div class="form-group mb-3">
-            <label class="form-label">Keterangan</label>
-            <textarea class="form-control" name="keterangan" id="keterangan"></textarea>
+            <label class="form-label">Kontak</label>
+            <input type="text" class="form-control" name="kontak" id="kontak" required>
+          </div>
+          <div class="form-group mb-3">
+            <label class="form-label">Kapasitas</label>
+            <input type="number" class="form-control" name="kapasitas" id="kapasitas" required>
           </div>
         </div>
         <div class="modal-footer">
@@ -149,8 +156,9 @@
       $('#kode_lama').val($(this).data('id'));
       $('#kode_gudang').val($(this).data('id'));
       $('#nama_gudang').val($(this).data('nama'));
-      $('#golongan').val($(this).data('golongan'));
-      $('#keterangan').val($(this).data('keterangan'));
+      $('#alamat').val($(this).data('alamat'));
+      $('#kontak').val($(this).data('kontak'));
+      $('#kapasitas').val($(this).data('kapasitas'));
       $('#gudangForm').attr('action', 'index.php?controller=gudang&action=update');
       $('#gudangModalTitle').text('Edit Gudang');
     });

@@ -20,11 +20,12 @@ class GudangController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $kode = $_POST['kode_gudang'];
             $nama = $_POST['nama_gudang'];
-            $golongan = $_POST['golongan'];
-            $keterangan = $_POST['keterangan'];
+            $alamat = $_POST['alamat'];
+            $kontak = $_POST['kontak'];
+            $kapasitas = $_POST['kapasitas'];
 
             try {
-                $result = $this->model->create($kode, $nama, $golongan, $keterangan);
+                $result = $this->model->create($kode, $nama, $alamat, $kontak, $kapasitas);
                 if ($result) {
                     header("Location: index.php?controller=gudang&action=index&status=success");
                 } else {
@@ -44,11 +45,12 @@ class GudangController
             $kodeLama = $_POST['kode_lama'];
             $kodeBaru = $_POST['kode_gudang'];
             $nama = $_POST['nama_gudang'];
-            $golongan = $_POST['golongan'];
-            $keterangan = $_POST['keterangan'];
+            $alamat = $_POST['alamat'];
+            $kontak = $_POST['kontak'];
+            $kapasitas = $_POST['kapasitas'];
 
             try {
-                $result = $this->model->update($kodeLama, $kodeBaru, $nama, $golongan, $keterangan);
+                $result = $this->model->update($kodeLama, $kodeBaru, $nama, $alamat, $kontak, $kapasitas);
                 if ($result) {
                     header("Location: index.php?controller=gudang&action=index&status=success");
                 } else {

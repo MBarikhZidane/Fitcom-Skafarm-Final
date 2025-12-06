@@ -2,7 +2,7 @@
 $host = "localhost";
 $user = "root";
 $pass = "";
-$db   = "skafarm_db";
+$db   = "skafarm_final_db";
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db", $user, $pass);

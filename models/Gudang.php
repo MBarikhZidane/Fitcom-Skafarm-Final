@@ -20,7 +20,7 @@ class Gudang
         return $stmt;
     }
 
-    public function create($kode, $nama, $golongan, $keterangan)
+    public function create($kode, $nama, $alamat, $kontak, $kapasitas)
     {
         $check = $this->conn->prepare("SELECT COUNT(*) FROM {$this->table} WHERE kode_gudang = :kode");
         $check->execute(['kode' => $kode]);
@@ -28,18 +28,19 @@ class Gudang
             return false;
         }
 
-        $sql = "INSERT INTO {$this->table} (kode_gudang, nama_gudang, golongan, keterangan) 
-            VALUES (:kode, :nama, :golongan, :keterangan)";
+        $sql = "INSERT INTO {$this->table} (kode_gudang, nama_gudang, alamat, kontak, kapasitas) 
+            VALUES (:kode, :nama, :alamat, :kontak, :kapasitas)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             'kode' => $kode,
             'nama' => $nama,
-            'golongan' => $golongan,
-            'keterangan' => $keterangan
+            'alamat' => $alamat,
+            'kontak' => $kontak,
+            'kapasitas' => $kapasitas
         ]);
     }
 
-    public function update($kodeLama, $kodeBaru, $nama, $golongan, $keterangan)
+    public function update($kodeLama, $kodeBaru, $nama, $alamat, $kontak, $kapasitas)
     {
         $check = $this->conn->prepare("SELECT COUNT(*) FROM gudang WHERE kode_gudang = :kode");
         $check->execute(['kode' => $kodeBaru]);
@@ -50,16 +51,18 @@ class Gudang
         $sql = "UPDATE {$this->table}  
             SET kode_gudang = :kode_baru,
                 nama_gudang = :nama,
-                golongan = :golongan,
-                keterangan = :keterangan
+                alamat = :alamat,
+                kontak = :kontak,
+                kapasitas = :kapasitas
             WHERE kode_gudang = :kode_lama";
 
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             'kode_baru' => $kodeBaru,
             'nama' => $nama,
-            'golongan' => $golongan,
-            'keterangan' => $keterangan,
+            'alamat' => $alamat,
+            'kontak' => $kontak,
+            'kapasitas' => $kapasitas,
             'kode_lama' => $kodeLama
         ]);
     }

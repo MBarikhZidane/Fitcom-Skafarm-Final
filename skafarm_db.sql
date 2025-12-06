@@ -34,7 +34,7 @@ CREATE TABLE `detail_transaksi` (
   `qty` int NOT NULL,
   `harga_satuan` int NOT NULL,
   `harga_total` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `detail_transaksi`
@@ -53,8 +53,8 @@ CREATE TABLE `gudang` (
   `kode_gudang` varchar(255) NOT NULL,
   `nama_gudang` varchar(255) NOT NULL,
   `golongan` varchar(255) NOT NULL,
-  `keterangan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `keterangan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `gudang`
@@ -80,7 +80,7 @@ CREATE TABLE `master_blog` (
   `artikel` text NOT NULL,
   `img` text NOT NULL,
   `created_at` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `master_blog`
@@ -107,7 +107,7 @@ CREATE TABLE `master_cart` (
   `qty` int NOT NULL,
   `harga_satuan` int NOT NULL,
   `subtotal` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `master_cart`
@@ -126,7 +126,7 @@ CREATE TABLE `master_kategori` (
   `kode_kategori` int NOT NULL,
   `img` text NOT NULL,
   `nama_kategori` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `master_kategori`
@@ -160,7 +160,7 @@ CREATE TABLE `master_transaksi` (
   `status` enum('pending','selesai') NOT NULL DEFAULT 'pending',
   `metode_pembayaran` enum('tunai','ovo','gopay','qris') NOT NULL,
   `alamat` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `master_transaksi`
@@ -181,7 +181,7 @@ CREATE TABLE `master_user` (
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `master_user`
@@ -208,7 +208,7 @@ CREATE TABLE `produk` (
   `kode_gudang` varchar(255) NOT NULL,
   `kategori_id` int NOT NULL,
   `deskripsi` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `produk`
@@ -235,12 +235,12 @@ INSERT INTO `produk` (`kode_produk`, `nama_barang`, `satuan`, `harga`, `img`, `s
 CREATE TABLE `produks_ratings` (
   `id_rating` int NOT NULL,
   `user_id` int NOT NULL,
-  `kode_produk` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `kode_produk` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `kode_transaksi` varchar(500) NOT NULL,
   `rating` int NOT NULL,
   `comment` text NOT NULL,
   `created_at` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `produks_ratings`

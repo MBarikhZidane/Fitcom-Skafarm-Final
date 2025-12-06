@@ -41,10 +41,22 @@ function isActive($controller, $action = 'beranda')
             <span>Kategori</span>
         </a>
 
+
+
         <a href="index.php?controller=gudang&action=index"
             class="menu-item <?= isActive('gudang', 'index') ?>">
             <i class="bi bi-building"></i>
             <span>Gudang</span>
+        </a>
+        <a href="index.php?controller=kendaraan&action=index"
+            class="menu-item <?= isActive('kendaraan', 'index') ?>">
+            <i class="bi bi-truck"></i>
+            <span>Kendaraan</span>
+        </a>
+        <a href="index.php?controller=pengiriman&action=index"
+            class="menu-item <?= isActive('pengiriman', 'index') ?>">
+            <i class="bi bi-building"></i>
+            <span>Data Pengiriman</span>
         </a>
         <?php  ?>
         <?php  ?>
